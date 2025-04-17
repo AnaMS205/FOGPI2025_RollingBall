@@ -4,14 +4,15 @@ using TMPro;
 
 public class PlayerControl : MonoBehaviour
 {
-    public float speed = 1.7f;
+    public float speed;
 
-    public float verticalInput;
-    public float horizontalInput;
+    //public float verticalInput;
+    //public float horizontalInput;
 
     public int lives = 3;
 
     public TMP_Text livesText;
+    public TMP_Text deathScreen;
     //public TMP_Text deathScreen;
 
     public int score = 0; //score = waves cleared * time 
@@ -20,6 +21,7 @@ public class PlayerControl : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        livesText.text = "Lives : " + lives.ToString();   
         playerRB = GetComponent<Rigidbody>();
         //deathScreen.text = "";
 
@@ -28,7 +30,6 @@ public class PlayerControl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
             float verticalInput = Input.GetAxis("Vertical"); //get inputs
             float horizontalInput = Input.GetAxis("Horizontal");
 
@@ -41,13 +42,18 @@ public class PlayerControl : MonoBehaviour
 
             if(transform.position.y < -5){  //handle falling
                 lives --;
+                if(lives == 0){
+                        //death and stop game
+                        //show score on death screen
+                        //stop game time
+                DeathScreen();
+                }
                 Respawn();
 
             }
 
-            UpdateLivesText();
-
                // while(lives > 0){
+            
 
         //once lives < 0
         //HandleDeath();
@@ -56,18 +62,16 @@ public class PlayerControl : MonoBehaviour
 
     void Respawn(){
         Vector3 respawnPosition = new Vector3(0,1,0);
+        //stop player from rolling after respawn
+        playerRB.linearVelocity = Vector3.zero;
+        playerRB.angularVelocity = Vector3.zero;
         transform.position = respawnPosition;
+        livesText.text = "Lives : " + lives.ToString();
     }
 
-    void UpdateLivesText(){
-        livesText.text = "Lives :: " + lives.ToString();
+    void DeathScreen(){
+        deathScreen.text = "YOU DIED";
+        Time.timeScale = 0;
     }
-
-    void HandleDeath(){
-        livesText.text = "";
-        //deathScreen.text = "You Died!\n\nYour Score was :: ";
-
-    }
-
    
 }

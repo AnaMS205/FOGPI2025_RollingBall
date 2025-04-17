@@ -45,6 +45,7 @@ public class Timer //countdown timer
 
     public void StartTimerFromEvent(){
         StartTimer();
+
     }
 
     public void StopTimer(){

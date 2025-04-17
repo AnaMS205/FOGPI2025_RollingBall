@@ -2,11 +2,10 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-
-    public float speedRange = 2.0f;
-
     private Rigidbody enemyRB;
     private GameObject player;
+
+    float speed = 2f;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -19,8 +18,6 @@ public class Enemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //decide readom speed
-        float speed = Random.Range(0.2f, speedRange);
         //find player and move twords loaction
         enemyRB.AddForce((player.transform.position - transform.position).normalized * speed);
 
