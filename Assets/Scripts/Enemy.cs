@@ -5,7 +5,7 @@ public class Enemy : MonoBehaviour
     private Rigidbody enemyRB;
     private GameObject player;
 
-    float speed = 2f;
+    float speed = 1f;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -23,6 +23,7 @@ public class Enemy : MonoBehaviour
 
         //destroy enemy if they fall off the cliff
         if(transform.position.y < -5){
+            ScoreManager.instance.AddPoints(3);
             Destroy(gameObject);
         }
     }

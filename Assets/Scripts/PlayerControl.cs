@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using TMPro;
+using Unity.VisualScripting;
 
 public class PlayerControl : MonoBehaviour
 {
@@ -13,11 +14,14 @@ public class PlayerControl : MonoBehaviour
 
     public TMP_Text livesText;
     public TMP_Text deathScreen;
+    public TMP_Text scoreText;
     //public TMP_Text deathScreen;
 
     public int score = 0; //score = waves cleared * time 
     
     private Rigidbody playerRB;
+    private float powerUpStrength = 15.0f;
+    private bool powerUp = false;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -52,7 +56,9 @@ public class PlayerControl : MonoBehaviour
 
             }
 
-               // while(lives > 0){
+            if(Input.GetKey("space")){
+                PowerUpActive();
+            }
             
 
         //once lives < 0
@@ -70,8 +76,25 @@ public class PlayerControl : MonoBehaviour
     }
 
     void DeathScreen(){
-        deathScreen.text = "YOU DIED";
+        deathScreen.text = "YOU DIED";//add score from score manager
+        scoreText.text = "your score is: "+ ScoreManager.instance.score.ToString();
         Time.timeScale = 0;
+    }
+
+    private void PowerUpActive(){
+        powerUp = true;
+        //yield return new WaitForSeconds(2);
+        //Debug.Log("the powerup is active");
+    }
+
+    private void OnCollisionEnter(Collision collision){
+        if(collision.gameObject.CompareTag("Enemy") && powerUp == true){
+            Rigidbody enemyRB = collision.gameObject.GetComponent<Rigidbody>();
+            Vector3 goAway = (collision.gameObject.transform.position - transform.position);
+
+            enemyRB.AddForce(goAway * powerUpStrength, ForceMode.Impulse);
+            powerUp = false;
+        }
     }
    
 }

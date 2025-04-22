@@ -14,13 +14,16 @@ public class ScoreManager : MonoBehaviour
     void Awake()    //called before start
     {
         if (instance == null){
-            
+
             instance = this;
         }else{
             //instance.score = 0; //reset score
             Destroy(this);  //if second insance, destroy the instance
             return;
         }
+
+        score = 0;
+        multiplyer = 1;
     }
 
     void Start()
@@ -39,6 +42,13 @@ public class ScoreManager : MonoBehaviour
         
     }
 
+    public void resetScore(){
+        multiplyer = 1;
+        score = 0;
+
+        updateScore.Invoke( new ScoreInfo(0, 0, 0, Vector3.zero));
+    }
+
     public class ScoreInfo{
         public float score;
         public float multiplyer;
@@ -54,4 +64,7 @@ public class ScoreManager : MonoBehaviour
            location = _location;
         }
     }
+
+    [System.Serializable]
+    public class UpdateScoreEvent : UnityEngine.Events.UnityEvent<ScoreInfo> {}
 }
