@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using TMPro;
 using Unity.VisualScripting;
+using UnityEngine.UI;
 
 public class PlayerControl : MonoBehaviour
 {
@@ -16,18 +17,23 @@ public class PlayerControl : MonoBehaviour
     public TMP_Text deathScreen;
     public TMP_Text scoreText;
     //public TMP_Text deathScreen;
+    public GameObject button;
 
     public int score = 0; //score = waves cleared * time 
     
-    private Rigidbody playerRB;
-    private float powerUpStrength = 15.0f;
-    private bool powerUp = false;
+     private Rigidbody playerRB;
+    // private float powerUpStrength = 15.0f;
+    // private bool powerUp = false;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        Time.timeScale = 1;
         livesText.text = "Lives : " + lives.ToString();   
+        deathScreen.text = " ";
+        scoreText.text = " ";
         playerRB = GetComponent<Rigidbody>();
         //deathScreen.text = "";
+        button.SetActive(false);
 
     }
 
@@ -56,13 +62,6 @@ public class PlayerControl : MonoBehaviour
 
             }
 
-            if(Input.GetKey("space")){
-                PowerUpActive();
-            }
-            
-
-        //once lives < 0
-        //HandleDeath();
 
     }
 
@@ -73,28 +72,23 @@ public class PlayerControl : MonoBehaviour
         playerRB.angularVelocity = Vector3.zero;
         transform.position = respawnPosition;
         livesText.text = "Lives : " + lives.ToString();
+        StartCoroutine(BlinkingText());
     }
 
     void DeathScreen(){
         deathScreen.text = "YOU DIED";//add score from score manager
         scoreText.text = "your score is: "+ ScoreManager.instance.score.ToString();
+        button.SetActive(true);
         Time.timeScale = 0;
     }
 
-    private void PowerUpActive(){
-        powerUp = true;
-        //yield return new WaitForSeconds(2);
-        //Debug.Log("the powerup is active");
-    }
-
-    private void OnCollisionEnter(Collision collision){
-        if(collision.gameObject.CompareTag("Enemy") && powerUp == true){
-            Rigidbody enemyRB = collision.gameObject.GetComponent<Rigidbody>();
-            Vector3 goAway = (collision.gameObject.transform.position - transform.position);
-
-            enemyRB.AddForce(goAway * powerUpStrength, ForceMode.Impulse);
-            powerUp = false;
+    IEnumerator BlinkingText(){
+        for(int i = 0; i>=3; i++){
+            livesText.enabled = !livesText.enabled;
+            yield return new WaitForSeconds(0.2f);
         }
+
     }
+
    
 }
